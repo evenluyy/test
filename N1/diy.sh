@@ -27,6 +27,7 @@ rm -rf package/small-package/upx-static
 rm -rf package/small-package/upx
 rm -rf package/small-package/firewall*
 rm -rf package/small-package/opkg
+rm -rf package/small-package/base-files
 rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
