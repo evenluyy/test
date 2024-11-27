@@ -11,7 +11,7 @@ rm -rf feeds/luci/applications/luci-app-passwall2
 
 git clone https://github.com/xiaorouji/openwrt-passwall package/passwall
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/passwall2
-git clone https://github.com/kenzok8/small-package package/small-package
+# git clone https://github.com/kenzok8/small-package package/small-package
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 rm -rf package/small-package/luci-app-openvpn-server
 rm -rf package/small-package/openvpn-easy-rsa-whisky
