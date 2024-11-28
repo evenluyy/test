@@ -138,20 +138,22 @@ jobs:
         SW_FLOWOFFLOAD: 0
         SFE_FLOW: 0
         
-
+    - name: 整理文件
+      run: mv /opt/openwrt_packit/output/* /workdir/upload/
     
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@master
+      uses: ncipollo/release-action@v1
       if: ${{ env.PACKAGED_STATUS == 'success' }} && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: OpenWrt_${{ env.PACKAGED_OUTPUTDATE }}
-        files: ${{ env.PACKAGED_OUTPUTPATH }}/*.img.xz
+        tag: OpenWrt_${{ env.PACKAGED_OUTPUTDATE }}
+        artifacts: /workdir/upload/*
+        allowUpdates: true
         body: |
           首次使用建议全新刷写
           * 基本信息
-          IP: 192.168.2.2
+          IP: 192.168.1.1
           账户: root
           密码: password
 
