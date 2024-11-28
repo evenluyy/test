@@ -40,8 +40,16 @@ rm -rf package/small-package/upx-static
 rm -rf package/small-package/upx
 rm -rf package/small-package/firewall*
 rm -rf package/small-package/opkg
+rm -rf package/small-package/luci-app-bandwidthd
+rm -rf package/small-package/luci-app-bypass
+rm -rf package/small-package/luci-app-dogcom
+rm -rf package/small-package/luci-app-gowebdav
+rm -rf package/small-package/luci-app-onliner
+rm -rf package/small-package/luci-app-nginx-pingos
+rm -rf package/small-package/luci-app-ssr-plus
 rm -rf package/small-package/base-files
 rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
 rm -rf package/feeds/packages/xfsprogs
+rm -rf package/small-package/natflow
