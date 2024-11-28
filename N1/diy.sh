@@ -18,6 +18,7 @@ rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-passwall2
 
 # Add packages
+git_sparse_clone main https://github.com/kenzok8/small-package luci-lib-taskd
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall luci-app-passwall
 git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall2 luci-app-passwall2
