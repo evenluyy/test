@@ -16,7 +16,7 @@ sed -i 's/192.168.1.1/192.168.110.247/g' package/base-files/files/bin/config_gen
 # Remove packages
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-passwall2
-
+rm -rf feeds/packages/gst1-plugins-base
 # Add packages
 #git_sparse_clone main https://github.com/kenzok8/small-package luci-lib-taskd
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
@@ -50,7 +50,7 @@ rm -rf package/small-package/luci-app-nginx-pingos
 rm -rf package/small-package/luci-app-ssr-plus
 rm -rf package/small-package/luci-app-onliner
 rm -rf package/small-package/natflow
-
+rm -rf package/small-package/luci-lib-taskd
 
 rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
