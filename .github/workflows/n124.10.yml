@@ -109,20 +109,20 @@ jobs:
         docker-images: true
         swap-storage: true
     
-  #  - name: 清理磁盘空
-   #   run: |
-   #     echo "清理之前："
-    #    df -hT
-      #  mkdir openwrt-armvirt
-#        mkdir /workdir/upload
-  #      cp openwrt/bin/targets/*/*/*.tar.gz /workdir/upload/
-   #     mv openwrt/bin/targets/*/*/*.tar.gz openwrt-armvirt/
-     #   echo -e "\n"
-      #  echo "列出空间占用前10的目录或文件："
-      #  sudo du -h --max-depth=1 /workdir |sort -nr | head -10
+    - name: 清理磁盘空
+      run: |
+        echo "清理之前："
+        df -hT
+        mkdir openwrt-armvirt
+        mkdir /workdir/upload
+        cp openwrt/bin/targets/*/*/*.tar.gz /workdir/upload/
+        mv openwrt/bin/targets/*/*/*.tar.gz openwrt-armvirt/
+        echo -e "\n"
+        echo "列出空间占用前10的目录或文件："
+        sudo du -h --max-depth=1 /workdir |sort -nr | head -10
       #  rm -rf /workdir/openwrt/ && sync
-      #  echo -e "\n"
-      #  echo "清理之后："
+       # echo -e "\n"
+       # echo "清理之后："
      #   df -hT
         
     - name: Package armsr as openwrt
