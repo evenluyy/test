@@ -25,6 +25,7 @@ git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall2 luci-app-pa
 #git_sparse_clone main https://github.com/kenzok8/small-package luci-app-store
 #git_sparse_clone main https://github.com/morytyann/OpenWrt-mihomo luci-app-mihomo mihomo
 git clone https://github.com/kenzok8/small-package package/small-package 
+git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 rm -rf package/small-package/luci-app-openvpn-server
