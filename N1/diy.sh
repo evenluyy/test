@@ -21,4 +21,8 @@ git clone https://github.com/kenzok8/small-package package/small-package
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
-
+rm -rf package/small-package/luci-app-bandwidthd
+rm -rf package/small-package/luci-app-dogcom
+rm -rf package/small-package/luci-app-gowebdav
+rm -rf package/small-package/luci-app-nginx-pingos
+rm -rf package/small-package/natflow
