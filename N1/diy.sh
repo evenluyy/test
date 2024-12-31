@@ -21,8 +21,32 @@ git clone https://github.com/kenzok8/small-package package/small-package
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
+rm -rf package/small-package/luci-app-openvpn-server
+rm -rf package/small-package/openvpn-easy-rsa-whisky
+rm -rf package/small-package/luci-app-wrtbwmon
+rm -rf package/small-package/wrtbwmon
+rm -rf package/small-package/luci-app-koolproxy
+rm -rf package/small-package/luci-app-godproxy
+rm -rf package/small-package/luci-app-argon*
+rm -rf package/small-package/luci-theme-argon*
+#rm -rf package/small-package/luci-app-amlogic
+rm -rf package/small-package/luci-app-unblockneteasemusic
+rm -rf package/small-package/upx-static
+rm -rf package/small-package/upx
+rm -rf package/small-package/firewall*
+rm -rf package/small-package/opkg
+rm -rf package/small-package/base-files
 rm -rf package/small-package/luci-app-bandwidthd
+rm -rf package/small-package/luci-app-bypass
 rm -rf package/small-package/luci-app-dogcom
 rm -rf package/small-package/luci-app-gowebdav
 rm -rf package/small-package/luci-app-nginx-pingos
+rm -rf package/small-package/luci-app-ssr-plus
+rm -rf package/small-package/luci-app-onliner
 rm -rf package/small-package/natflow
+# rm -rf package/small-package/luci-lib-taskd
+
+rm -rf package/feeds/packages/aliyundrive-webdav
+rm -rf feeds/packages/multimedia/aliyundrive-webdav
+rm -rf package/feeds/packages/perl-xml-parser
+rm -rf package/feeds/packages/xfsprogs
