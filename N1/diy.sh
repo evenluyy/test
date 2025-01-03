@@ -33,8 +33,8 @@ rm -rf package/small-package/luci-app-godproxy
 rm -rf package/small-package/luci-app-unblockneteasemusic
 rm -rf package/small-package/upx-static
 rm -rf package/small-package/upx
-rm -rf package/small-package/firewall*
-rm -rf package/small-package/opkg
+#rm -rf package/small-package/firewall*
+#rm -rf package/small-package/opkg
 rm -rf package/small-package/base-files
 rm -rf package/small-package/luci-app-bandwidthd
 rm -rf package/small-package/luci-app-bypass
