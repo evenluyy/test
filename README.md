@@ -5,6 +5,8 @@ forked from 大佬nantayo项目: [nantayo/N1-OpenWrt](https://github.com/nantayo
 
 无拨号，无无线网络！<br>
 
+内核默认拉取最新<br>
+
 如需他用自行forke编译！fork后请删除 N1/files/etc/config 文件夹下network,dhcp两个文件并修改div.sh第七行的ip:192.168.110.247为自己的网段ip。然后到Actions选择Build ImmortalWrt for N1 24<br>  启动编译，等2.5小时！<br>
 
      
