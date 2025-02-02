@@ -14,7 +14,6 @@ forked from 大佬nantayo项目: [nantayo/N1-OpenWrt](https://github.com/nantayo
 默认安装:<br>
 samba4<br>
 PassWall2<br>
-OpenClash<br>
 如需其他插件自行到N1/.config文件添加！<br>
 # 致谢
 本项目基于 [ImmortalWrt-24.10](https://github.com/immortalwrt/immortalwrt/tree/openwrt-23.05) 源码编译，使用 flippy 的[脚本](https://github.com/unifreq/openwrt_packit)和 breakings 维护的[内核](https://github.com/breakings/OpenWrt/releases/tag/kernel_stable)打包成完整固件，感谢开发者们的无私分享。<br>
