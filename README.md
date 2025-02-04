@@ -1,5 +1,5 @@
 forked from 大佬nantayo项目: [nantayo/N1-OpenWrt](https://github.com/nantayo/N1-OpenWrt)<br>
-斐讯N1盒子  openwrt 24.10<br>
+openwrt 24.10<br>
 
 自用版本 默认Ip 192.168.110.247<br>
 
