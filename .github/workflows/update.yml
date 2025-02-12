@@ -35,6 +35,10 @@ jobs:
         large-packages: true
         docker-images: true
         swap-storage: true
+    - name: disk
+      run: |
+           echo "ff"
+           df -h
     - name: Prepare Environment
       env:
         DEBIAN_FRONTEND: noninteractive
