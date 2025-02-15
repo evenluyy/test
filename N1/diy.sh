@@ -10,9 +10,9 @@ sed -i 's/192.168.1.1/192.168.110.247/g' package/base-files/files/bin/config_gen
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-passwall2
 # rm -rf feeds/packages/gst1-plugins-base
-# Add packages
-git clone https://github.com/immortalwrt-collections/openwrt-cdnspeedtest package/cdnspeedtest
-git clone https://github.com/gqbre/luci-app-cloudflarespeedtest package/luci-app-cloudflarespeedtest
+# cf测速换ip两个插件
+#git clone https://github.com/immortalwrt-collections/openwrt-cdnspeedtest package/cdnspeedtest
+#git clone https://github.com/gqbre/luci-app-cloudflarespeedtest package/luci-app-cloudflarespeedtest
 #git_sparse_clone main https://github.com/kenzok8/small-package luci-lib-taskd
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 #git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall luci-app-passwall
