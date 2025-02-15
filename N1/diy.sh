@@ -19,9 +19,9 @@ git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 #git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall2 luci-app-passwall2
 #git_sparse_clone main https://github.com/kenzok8/small-package luci-app-store
 #git_sparse_clone main https://github.com/morytyann/OpenWrt-mihomo luci-app-mihomo mihomo
-git clone https://github.com/kenzok8/small-package package/small-package 
+#git clone https://github.com/kenzok8/small-package package/small-package 
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
-# sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
+sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 # sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 rm -rf package/small-package/luci-app-openvpn-server
 rm -rf package/small-package/openvpn-easy-rsa-whisky
@@ -47,7 +47,7 @@ rm -rf package/small-package/luci-app-ssr-plus
 rm -rf package/small-package/luci-app-onliner
 rm -rf package/small-package/natflow
 # rm -rf package/small-package/luci-lib-taskd
-
+rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
 rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
