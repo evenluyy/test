@@ -4,7 +4,7 @@
 
 
 # Default IP
-sed -i 's/192.168.1.1/192.168.110.247/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.1.80/g' package/base-files/files/bin/config_generate
 
 # Remove packages
 rm -rf feeds/luci/applications/luci-app-passwall
@@ -29,7 +29,7 @@ rm -rf package/small-package/luci-app-wrtbwmon
 rm -rf package/small-package/wrtbwmon
 rm -rf package/small-package/luci-app-koolproxy
 rm -rf package/small-package/luci-app-godproxy
-#rm -rf package/small-package/luci-app-argon*
+rm -rf package/small-package/luci-app-passwall2
 #rm -rf package/small-package/luci-theme-argon*
 rm -rf package/small-package/luci-app-amlogic
 rm -rf package/small-package/luci-app-unblockneteasemusic
