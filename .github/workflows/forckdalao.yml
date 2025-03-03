@@ -170,9 +170,9 @@ jobs:
           密码: 空
           
     - name: Delete old releases
-      uses: dev-drprasad/delete-older-releases@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: Mattraks/delete-workflow-runs@v2.0.6
       with:
-        keep_latest: 1
-        delete_tags : true
+         token: ${{ secrets.GITHUB_TOKEN }}
+         repository: ${{ github.repository }}
+         retain_days: 1
+         keep_minimum_runs: 1
