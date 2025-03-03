@@ -103,7 +103,7 @@ jobs:
         KERNEL_AUTO_LATEST: true
         PACKAGE_SOC: s905d
         GZIP_IMGS: .xz
-        KERNEL_REPO_URL: ophub/kernel
+        KERNEL_REPO_URL: dsddr02/serv16
        # SCRIPT_DIY_PATH: N1/mk_s905d_n1.sh
         SW_FLOWOFFLOAD: 0
         SFE_FLOW: 0
