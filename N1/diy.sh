@@ -47,7 +47,7 @@ rm -rf package/small-package/luci-app-ssr-plus
 rm -rf package/small-package/luci-app-onliner
 rm -rf package/small-package/natflow
 rm -rf package/small-package/luci-app-cloudflarespeedtest
-rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+#rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
 rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
