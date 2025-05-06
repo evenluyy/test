@@ -96,18 +96,33 @@ jobs:
     - name: Download package
       working-directory: ./openwrt
       run: |
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+          make download -j8
+          find dl -size -1024c -exec rm -f {} \;
 
-    - name: Compile the firmware
-      env:
-        CGO_CFLAGS: "-I/usr/include/fuse3"  # 显式指定头文件路径
+    - name: Rebuild toolchain
+      working-directory: ./openwrt
       run: |
-        cd openwrt
-        echo -e "$(nproc) thread compile"
-        make -j$(nproc) package/alist/compile || make -j1 package/alist/compile V=s
-        echo "compile_status=success" >> $GITHUB_ENV
+          make toolchain/clean
+          make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+
+    - name: Check toolchain files
+      run: |
+          ls -la /workdir/openwrt/staging_dir/toolchain-*/lib/ || true
+          [ -f /workdir/openwrt/staging_dir/toolchain-aarch64_generic_gcc-13.3.0_musl/lib/ld-musl-aarch64.so.1 ] || exit 1
+
+    - name: Compile dependencies
+      working-directory: ./openwrt
+      run: |
+          make package/feeds/packages/golang/host-compile -j$(nproc)
+          make package/libs/toolchain/compile -j$(nproc)
+
+    - name: Compile alist
+      env:
+          CGO_CFLAGS: "-I/usr/include/fuse3"
+      working-directory: ./openwrt
+      run: |
+          make package/alist/compile -j$(nproc) || make package/alist/compile -j1 V=s
+          echo "compile_status=success" >> $GITHUB_ENV
 
     - name: Verify FUSE support
       run: |
