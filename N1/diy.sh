@@ -8,6 +8,7 @@ sed -i 's/192.168.1.1/192.168.2.80/g' package/base-files/files/bin/config_genera
 
 # Remove packages
 rm -rf feeds/luci/applications/luci-app-passwall
+rm -rf feeds/luci/applications/luci-app-alist
 rm -rf feeds/luci/applications/luci-app-passwall2
 # rm -rf feeds/packages/gst1-plugins-base
 # cf测速换ip两个插件
@@ -52,3 +53,4 @@ rm -rf package/feeds/packages/aliyundrive-webdav
 rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
 rm -rf package/feeds/packages/xfsprogs
+rm -rf package/feeds/packages/alist
