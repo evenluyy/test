@@ -54,3 +54,4 @@ rm -rf feeds/packages/multimedia/aliyundrive-webdav
 rm -rf package/feeds/packages/perl-xml-parser
 rm -rf package/feeds/packages/xfsprogs
 rm -rf package/feeds/packages/alist
+rm -rf feeds/packages/net/alist
