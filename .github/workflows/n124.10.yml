@@ -99,43 +99,15 @@ jobs:
           make download -j8
           find dl -size -1024c -exec rm -f {} \;
 
-    - name: Rebuild toolchain
-      working-directory: ./openwrt
+    - name: Compile the firmware
       run: |
-          make toolchain/clean
-          make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
-
-    - name: Check toolchain files
-      run: |
-          ls -la /workdir/openwrt/staging_dir/toolchain-*/lib/ || true
-          [ -f /workdir/openwrt/staging_dir/toolchain-aarch64_generic_gcc-13.3.0_musl/lib/ld-musl-aarch64.so.1 ] || exit 1
-
-    - name: Compile dependencies
-      working-directory: ./openwrt
-      run: |
-          make package/feeds/packages/golang/host-compile -j$(nproc)
-          make package/libs/toolchain/compile -j$(nproc)
-
-    - name: Compile alist
-      env:
-          CGO_CFLAGS: "-I/usr/include/fuse3"
-      working-directory: ./openwrt
-      run: |
-          make package/alist/compile -j$(nproc) || make package/alist/compile -j1 V=s
-          echo "compile_status=success" >> $GITHUB_ENV
-
-    - name: Verify FUSE support
-      run: |
-        echo "Checking FUSE headers:"
-        ls -l /usr/include/fuse* || echo "FUSE headers not found!"
-        echo -e "\nChecking compiled kmod-fuse:"
-        find openwrt/bin -name "kmod-fuse*" | xargs ls -lh
-
-    - name: Full firmware compilation
-      if: env.compile_status == 'success'
-      run: |
+        chmod -R 755 openwrt
         cd openwrt
-        make -j$(nproc) || make -j1 V=s
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "compile_status=success" >> $GITHUB_ENV
+        rm -rf ${{ github.workspace }}/openwrt/bin/targets/*/*/packages
+        df -hT
 
     # 后续步骤保持不变...
     - name: Free up space2
