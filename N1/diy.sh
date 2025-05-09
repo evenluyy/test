@@ -10,6 +10,7 @@ sed -i 's/192.168.1.1/192.168.2.80/g' package/base-files/files/bin/config_genera
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-alist
 rm -rf feeds/luci/applications/luci-app-passwall2
+rm -rf feeds/packages/net/cdnspeedtest
 # rm -rf feeds/packages/gst1-plugins-base
 # cf测速换ip两个插件
 git clone https://github.com/immortalwrt-collections/openwrt-cdnspeedtest package/cdnspeedtest
@@ -33,6 +34,7 @@ rm -rf package/small-package/luci-app-godproxy
 rm -rf package/small-package/luci-app-passwall2
 #rm -rf package/small-package/luci-theme-argon*
 rm -rf package/small-package/luci-app-amlogic
+rm -rf package/small-package/cdnspeedtest
 rm -rf package/small-package/luci-app-unblockneteasemusic
 rm -rf package/small-package/upx-static
 rm -rf package/small-package/upx
