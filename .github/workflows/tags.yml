@@ -1,27 +1,30 @@
 name: Delete Old Tags
 
 on:
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日午夜运行
   workflow_dispatch:
-    inputs:
-      tag_pattern:
-        description: 'Tag pattern to delete (e.g. v1.*)'
-        required: true
-        default: 'openwrt_*'
 
 jobs:
-  delete-tags:
+  delete-old-tags:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # 获取所有历史记录和tags
+        fetch-depth: 0
 
-    - name: Delete local tags matching pattern
+    - name: Delete tags older than 90 days
       run: |
-        git tag -l "${{ inputs.tag_pattern }}" | xargs git tag -d
-        git fetch --tags  # 重新获取远程tags以同步
-
-    - name: Delete remote tags matching pattern
-      run: |
-        git tag -l "${{ inputs.tag_pattern }}" | xargs -I {} git push origin :refs/tags/{}
+        # 获取90天前的日期
+        CUTOFF_DATE=$(date -d "7 days ago" +%Y-%m-%d)
+        
+        # 列出所有tags并过滤
+        git for-each-ref --sort=-creatordate --format '%(creatordate:iso8601) %(refname:short)' refs/tags | \
+        while read date tag; do
+          if [[ "$date" < "$CUTOFF_DATE" ]]; then
+            echo "Deleting old tag: $tag ($date)"
+            git tag -d "$tag"
+            git push origin ":refs/tags/$tag"
+          fi
+        done
