@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete old releases
-        uses: dev-drprasad/delete-old-releases@v0.2.1
+        uses: dev-drprasad/delete-older-releases@v0.3.4
         with:
           keep_latest: 1  # 保留最新的5个发布
           delete_tag: true  # 同时删除关联的标签
