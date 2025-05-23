@@ -16,3 +16,5 @@ jobs:
           delete_tag: true  # 同时删除关联的标签
           repo: ${{ github.repository }}
           token: ${{ secrets.GI_TOKEN }}
+        env:
+         GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
