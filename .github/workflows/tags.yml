@@ -12,9 +12,16 @@ jobs:
   delete-tags:
     runs-on: ubuntu-latest
     steps:
-    - name: Delete tags
-      uses: mathieudutour/delete-tag-and-release@v5
+    - name: Checkout repository
+      uses: actions/checkout@v4
       with:
-        tags: ${{ inputs.tag_pattern }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
+        fetch-depth: 0  # 获取所有历史记录和tags
+
+    - name: Delete local tags matching pattern
+      run: |
+        git tag -l "${{ inputs.tag_pattern }}" | xargs git tag -d
+        git fetch --tags  # 重新获取远程tags以同步
+
+    - name: Delete remote tags matching pattern
+      run: |
+        git tag -l "${{ inputs.tag_pattern }}" | xargs -I {} git push origin :refs/tags/{}
