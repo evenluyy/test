@@ -1,0 +1,20 @@
+name: Delete Old Tags
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_pattern:
+        description: 'Tag pattern to delete (e.g. v1.*)'
+        required: true
+        default: 'openwrt_*'
+
+jobs:
+  delete-tags:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete tags
+      uses: mathieudutour/delete-tag-and-release@v5
+      with:
+        tags: ${{ inputs.tag_pattern }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
