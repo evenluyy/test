@@ -1,178 +1,21 @@
-name: 为 N1 构建 OpenWRT-IMM
+name: Cleanup Old Releases
 
 on:
-  workflow_dispatch:
-
-env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: openwrt-24.10
-  CONFIG_FILE: N1/.config
-  DIY_SH: N1/diy.sh
-  FILES: N1/files
-  TZ: Asia/Shanghai
+  workflow_dispatch:  # 手动触发
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日午夜运行
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-
+  delete-old-releases:
+    runs-on: ubuntu-latest
     steps:
-    - name: 检查机器配置
-      run: |
-        echo "警告⚠"
-        echo "分配的服务器性能有限，若选择的插件过多，务必注意CPU性能！"
-        echo "云编译建议取消勾选Node.js及其相关插件！"
-        echo "已知CPU型号（降序）：7763,8370C,8272CL,8171M,E5系列"
-        echo "--------------------------CPU信息--------------------------"
-        echo "CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
-        echo -e "CPU核心及版本信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
-        echo "--------------------------内存信息--------------------------"
-        echo "已安装内存详细信息："
-        sudo lshw -short -C memory | grep GiB
-        echo -e "\n"
-        echo "--------------------------硬盘信息--------------------------"
-        echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
-        echo "硬盘详情："
-        df -Th
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: 释放磁盘空间前
-      run: |
-        echo "释放磁盘空间前"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-
-    - name: "优化磁盘空间"
-      uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
-      with:
-        operate_sudo: "True"
-        general_include: ".+"
-        general_exclude: |-
-          ^GCC$
-          ^G\+\+$
-          Clang
-          LLVM
-        docker_include: ".+"
-        docker_prune: "True"
-        docker_clean: "True"
-        apt_prune: "True"
-        apt_clean: "True"
-        homebrew_prune: "True"
-        homebrew_clean: "True"
-        npm_prune: "True"
-        npm_clean: "True"
-        os_swap: "True"
-
-    - name: 释放磁盘空间
-      uses: easimon/maximize-build-space@master
-      with:
-        root-reserve-mb: 10240
-        swap-size-mb: 1
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
-
-    - name: 释放磁盘空间完成
-      run: |
-        echo "释放磁盘空间完成"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-
-    - name: 检出代码
-      uses: actions/checkout@main
-
-    - name: 初始化环境
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo -E apt-get -qq update -y
-        sudo -E apt-get -qq install -y build-essential libncurses5-dev libssl-dev zlib1g-dev gawk bison flex quilt libelf-dev bc binutils-dev libudev-dev libzstd-dev
-        sudo -E apt-get -qq autoremove --purge
-        sudo -E apt-get -qq clean
-        sudo timedatectl set-timezone "$TZ"
-        sudo chown $USER:$GROUPS $GITHUB_WORKSPACE
-
-    - name: 克隆源代码
-      working-directory: ./
-      run: |
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
-
-    - name: 缓存 wrt 构建
-      uses: stupidloud/cachewrtbuild@main
-      with:
-        ccache: 'true'
-        mixkey: N1-IMM-${{ env.REPO_BRANCH }}
-        prefix: ${{ github.workspace }}/openwrt
-
-    - name: 更新并安装 feeds
-      working-directory: ./openwrt
-      run: |
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-
-    - name: 加载自定义配置
-      run: |
-        [ -e "$FILES" ] && mv "$FILES" openwrt/files
-        [ -e "$CONFIG_FILE" ] && mv "$CONFIG_FILE" openwrt/.config
-        chmod +x "$DIY_SH"
-        cd openwrt
-        bash "$GITHUB_WORKSPACE/$DIY_SH"
-
-    # - name: SSH 连接到 Actions
-    #   uses: P3TERX/ssh2actions@main
-    #   if: (github.event.inputs.ssh == 'true') || contains(github.event.action, 'ssh')
-
-    - name: 下载软件包
-      working-directory: ./openwrt
-      run: |
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-
-    - name: 编译固件
-      run: |
-        chmod -R 755 openwrt
-        cd openwrt
-        echo -e "$(nproc) 线程编译"
-        make -j$(nproc) || make -j1 || make -j1 V=s
-        echo "compile_status=success" >> $GITHUB_ENV
-
-    - name: 打包 OpenWrt 固件
-      if: ${{ env.compile_status }} == 'success' && !cancelled()
-      uses: unifreq/openwrt_packit@master
-      env:
-        OPENWRT_ARMVIRT: openwrt/bin/targets/*/*/immortalwrt-armsr-armv8-generic-rootfs.tar.gz
-        KERNEL_VERSION_NAME: 6.6.y_6.12.y
-        KERNEL_AUTO_LATEST: true
-        PACKAGE_SOC: s905d
-        WHOAMI: Test
-        KERNEL_REPO_URL: dsddr02/serv16
-        SW_FLOWOFFLOAD: 0
-        SFE_FLOW: 0
-
-    - name: 上传 OpenWrt 固件到 Release
-      uses: ncipollo/release-action@main
-      if: ${{ env.PACKAGED_STATUS == 'success' }} && !cancelled()
-      with:
-        tag: immortalwrt_N1_${{ env.PACKAGED_OUTPUTDATE }}
-        artifacts: /opt/openwrt_packit/output/*
-        allowUpdates: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        body: |
-          基于immortalwrt openwrt构建
-          首次使用建议全新刷写
-          * 基本信息
-          IP: 192.168.2.2
-          账户: root
-          密码: 空
-
-    - name: 删除旧的 Releases
-      uses: Mattraks/delete-workflow-runs@v2.0.6
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repository: ${{ github.repository }}
-        retain_days: 1
-        keep_minimum_runs: 0
+      - name: Delete old releases
+        uses: actions/delete-release@v1
+        with:
+          delete_tag: true  # 同时删除关联的标签
+          keep_latest: 5    # 保留最新的5个发布
+          repo: ${{ github.repository }}
+          token: ${{ secrets.GI_TOKEN }}
