@@ -95,6 +95,7 @@ jobs:
         echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
         echo "CONFIG_PACKAGE_libfuse=y" >> .config
         echo "CONFIG_PACKAGE_cdnspeedtest=y" >> .config
+        make prereq
         make defconfig
 
     - name: Load custom config
