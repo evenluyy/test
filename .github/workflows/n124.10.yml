@@ -37,8 +37,8 @@ jobs:
 
     - name: Initialize environment
       env:
-       DEBIAN_FRONTEND: noninteractive
-       run: |
+        DEBIAN_FRONTEND: noninteractive
+      run: |
          # 修复可能存在的包问题
          sudo apt-get update
          sudo apt-get --fix-broken install -y
