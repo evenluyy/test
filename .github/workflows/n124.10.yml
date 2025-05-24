@@ -58,7 +58,13 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-
+    - name: Setup Go and CGO
+      run: |
+        sudo apt-get install -y golang-1.21 gccgo  # 指定 Go 版本
+        sudo ln -sf /usr/lib/go-1.21/bin/go /usr/bin/go
+        echo "CGO_ENABLED=1" >> $GITHUB_ENV
+        echo "GOPATH=/workdir/go" >> $GITHUB_ENV
+        mkdir -p /workdir/go
     - name: Clone source code
       working-directory: /workdir
       run: |
@@ -71,7 +77,14 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         ./scripts/feeds install libfuse  # 确保 FUSE 包被安装
-
+        ./scripts/feeds install golang  # 确保 Go 语言支持被安装
+    - name: Configure CGO and FUSE
+      working-directory: ./openwrt
+      run: |
+        echo "CONFIG_PACKAGE_GO_CGO_ENABLED=y" >> .config
+        echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
+        echo "CONFIG_PACKAGE_libfuse=y" >> .config
+        make defconfig
     - name: Load custom config
       run: |
         [ -e $FILES ] && mv $FILES openwrt/files
@@ -120,7 +133,7 @@ jobs:
         large-packages: true
         docker-images: true
         swap-storage: true
-
+        go-cache: true
     - name: 清理磁盘空间
       run: |
         mkdir openwrt-armvirt
