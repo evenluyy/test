@@ -58,9 +58,8 @@ jobs:
          squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
-         libtool-bin pkg-config \
-         gettext texinfo
-
+         libtool-bin gettext texinfo
+         sudo apt-get install -y pkg-config=0.29.1-0ubuntu2  # 指定兼容版本
          # 清理
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
