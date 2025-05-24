@@ -41,8 +41,8 @@ jobs:
       run: |
          # 修复可能存在的包问题
          sudo apt-get update
-         sudo apt-get --fix-broken install -y
-         sudo apt-get dist-upgrade -y
+         sudo apt-get remove --purge pkg-config || true  # 忽略未安装时的错误
+         sudo apt-get install -y pkgconf
 
          # 安装编译依赖
          sudo apt-get install -y \
@@ -59,8 +59,7 @@ jobs:
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
          libtool-bin gettext texinfo
-         sudo apt-get install -y pkg-config=0.29.1-0ubuntu2  # 指定兼容版本
-         # 清理
+         
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
          sudo timedatectl set-timezone "$TZ"
