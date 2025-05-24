@@ -59,7 +59,7 @@ jobs:
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
          libtool-bin gettext texinfo
-         
+         sudo apt-get install -y libfuse-dev python3-dev libyaml-dev
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
          sudo timedatectl set-timezone "$TZ"
@@ -103,7 +103,8 @@ jobs:
         echo "CONFIG_PACKAGE_libfuse=y" >> .config
         echo "CONFIG_PACKAGE_cdnspeedtest=y" >> .config
         make prereq v=s
-        make defconfig
+        
+        make -j1 defconfig FORCE=1
 
     - name: Load custom config
       run: |
