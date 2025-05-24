@@ -102,7 +102,7 @@ jobs:
         echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
         echo "CONFIG_PACKAGE_libfuse=y" >> .config
         echo "CONFIG_PACKAGE_cdnspeedtest=y" >> .config
-        make prereq v=s
+        # make prereq v=s
         
         make -j1 defconfig FORCE=1
 
