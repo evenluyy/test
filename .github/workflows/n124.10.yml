@@ -52,7 +52,9 @@ jobs:
           python3-docutils python3-pyelftools qemu-utils re2c rsync scons \
           squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
           wget xmlto xxd zlib1g-dev zstd \
-          libfuse-dev fuse
+          libfuse-dev fuse sed gawk coreutils file \
+          libtool-bin pkg-config \
+          gettext texinfo
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
