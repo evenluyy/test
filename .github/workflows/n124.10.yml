@@ -1,4 +1,4 @@
-name: Build ImmortalWrt for N1 24
+gname: Build ImmortalWrt for N1 24
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
@@ -41,9 +41,7 @@ jobs:
       run: |
          # 修复可能存在的包问题
          sudo apt-get update
-         sudo apt-get remove --purge pkg-config || true  # 忽略未安装时的错误
-         sudo apt-get install -y pkgconf
-
+         
          # 安装编译依赖
          sudo apt-get install -y \
          ack antlr3 asciidoc autoconf automake autopoint binutils bison \
@@ -58,7 +56,7 @@ jobs:
          squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
-         libtool-bin gettext texinfo
+         libtool-bin gettext pkgconf
          sudo apt-get install -y libfuse-dev python3-dev libyaml-dev
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
