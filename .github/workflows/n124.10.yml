@@ -57,7 +57,7 @@ jobs:
          python3-docutils python3-pyelftools qemu-utils re2c rsync scons \
          squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
          wget xmlto xxd zlib1g-dev zstd \
-         libfuse-dev fuse libtool-bin 
+         libfuse-dev fuse
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
          sudo timedatectl set-timezone "$TZ"
