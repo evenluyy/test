@@ -18,7 +18,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
@@ -41,7 +41,9 @@ jobs:
       run: |
          # 修复可能存在的包问题
          sudo apt-get update
-         
+         sudo apt-get remove --purge pkg-config || true  # 忽略未安装时的错误
+         sudo apt-get install -y pkgconf
+
          # 安装编译依赖
          sudo apt-get install -y \
          ack antlr3 asciidoc autoconf automake autopoint binutils bison \
@@ -56,7 +58,7 @@ jobs:
          squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
-         libtool-bin gettext pkgconf
+         libtool-bin gettext texinfo
          sudo apt-get install -y libfuse-dev python3-dev libyaml-dev
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
@@ -103,7 +105,16 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_SH
 
-    
+    - name: Configure FUSE and dependencies
+      working-directory: ./openwrt
+      run: |
+        echo "CONFIG_FUSE_FS=y" >> .config
+        echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
+        echo "CONFIG_PACKAGE_libfuse=y" >> .config
+        echo "CONFIG_PACKAGE_alist=y" >> .config
+        echo "CONFIG_PACKAGE_cdnspeedtest=y" >> .config
+        make defconfig
+
     - name: SSH connect to Actions
       uses: P3TERX/ssh2actions@main
       if: (github.event.inputs.ssh == 'true') || contains(github.event.action, 'ssh')
