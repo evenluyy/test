@@ -18,7 +18,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.latest
 
     steps:
     - name: Checkout
@@ -58,7 +58,7 @@ jobs:
          squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
          wget xmlto xxd zlib1g-dev zstd \
          libfuse-dev fuse sed gawk coreutils file \
-         libtool-bin gettext texinfo
+         libtool-bin 
          sudo apt-get install -y libfuse-dev python3-dev libyaml-dev
          sudo apt-get autoremove --purge -y
          sudo apt-get clean
