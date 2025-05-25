@@ -105,16 +105,7 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_SH
 
-    - name: Configure FUSE and dependencies
-      working-directory: ./openwrt
-      run: |
-        echo "CONFIG_FUSE_FS=y" >> .config
-        echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
-        echo "CONFIG_PACKAGE_libfuse=y" >> .config
-        echo "CONFIG_PACKAGE_alist=y" >> .config
-        # echo "CONFIG_PACKAGE_cdnspeedtest=y" >> .config
-        make defconfig
-
+    
     - name: SSH connect to Actions
       uses: P3TERX/ssh2actions@main
       if: (github.event.inputs.ssh == 'true') || contains(github.event.action, 'ssh')
