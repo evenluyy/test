@@ -4,7 +4,7 @@
 
 
 # Default IP
-sed -i 's/192.168.1.1/192.168.2.81/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/192.168.110.241/g' package/base-files/files/bin/config_generate
 
 # Remove packages
 rm -rf feeds/luci/applications/luci-app-passwall
@@ -19,7 +19,7 @@ git clone https://github.com/dsddr02/peed11 package/luci-app-cloudflarespeedtest
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 #git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
-git clone https://github.com/sbwml/luci-app-openlist package/luci-app-openlist
+git clone https://github.com/sbwml/luci-app-openlist package/luci-app-openlist2
 #git_sparse_clone main https://github.com/morytyann/OpenWrt-mihomo luci-app-mihomo mihomo
 git clone https://github.com/kenzok8/small-package package/small-package 
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
@@ -59,3 +59,6 @@ rm -rf package/feeds/packages/alist
 rm -rf feeds/packages/net/alist
 rm -rf feeds/luci/applications/luci-app-openlist
 rm -rf package/small-package/luci-app-openlist
+rm -rf feeds/luci/applications/luci-app-openlist2
+rm -rf package/small-package/luci-app-openlist2
+
