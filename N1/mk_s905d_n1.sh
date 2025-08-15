@@ -18,7 +18,7 @@ SUBVER=$1
 
 # Kernel image sources
 ###################################################################
-KERNEL_TAGS="kernel_flippy"
+KERNEL_TAGS="stable"
 KERNEL_BRANCHES="mainline:all:>=:5.4"
 MODULES_TGZ=${KERNEL_PKG_HOME}/modules-${KERNEL_VERSION}.tar.gz
 check_file ${MODULES_TGZ}
