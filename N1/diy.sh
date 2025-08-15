@@ -19,7 +19,7 @@ git clone https://github.com/dsddr02/peed11 package/luci-app-cloudflarespeedtest
 git clone --depth=1 https://github.com/ophub/luci-app-amlogic package/amlogic
 #git_sparse_clone main https://github.com/xiaorouji/openwrt-passwall luci-app-passwall
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
-git clone https://github.com/sbwml/luci-app-openlist package/luci-app-openlist2
+git clone https://github.com/sbwml/luci-app-openlist2 package/luci-app-openlist2
 #git_sparse_clone main https://github.com/morytyann/OpenWrt-mihomo luci-app-mihomo mihomo
 git clone https://github.com/kenzok8/small-package package/small-package 
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
