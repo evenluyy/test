@@ -39,7 +39,7 @@ jobs:
     - name: Initialize environment
       env:
        DEBIAN_FRONTEND: noninteractive
-       run: |
+      run: |
         sudo -E apt-get -qq update -y
         sudo -E apt-get -qq install -y \
         ack antlr3 asciidoc autoconf automake autopoint binutils bison \
