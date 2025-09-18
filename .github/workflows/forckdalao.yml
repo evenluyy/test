@@ -56,10 +56,10 @@ jobs:
 
         # 编译安装 libnftnl 1.3.0
         cd /tmp
-        wget https://netfilter.org/projects/libnftnl/files/libnftnl-1.3.0.tar.xz
+        wget https://netfilter.org/projects/libnftnl/files/libnftnl-1.2.9.tar.xz
         
-        tar -xJf libnftnl-1.3.0.tar.xz
-        cd libnftnl-1.3.0
+        tar -xJf libnftnl-1.2.9.tar.xz
+        cd libnftnl-1.2.9
         ./configure --prefix=/usr/local
         make -j$(nproc)
         sudo make install
