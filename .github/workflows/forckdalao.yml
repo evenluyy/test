@@ -66,7 +66,7 @@ jobs:
         sudo ldconfig
 
         # 验证 libnftnl 版本
-        nftnl --version
+        # nftnl --version
 
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
