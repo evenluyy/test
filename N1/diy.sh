@@ -23,19 +23,13 @@ git clone https://github.com/sbwml/luci-app-openlist2 package/luci-app-openlist2
 #git_sparse_clone main https://github.com/morytyann/OpenWrt-mihomo luci-app-mihomo mihomo
 git clone https://github.com/kenzok8/small-package package/small-package 
 git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-packages 
-# sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
-# sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.conf.default
 
 rm -rf package/small-package/luci-app-passwall2
 #rm -rf package/small-package/luci-theme-argon*
 rm -rf package/small-package/luci-app-amlogic
-rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
+rm -rf feeds/small-package/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
 rm -rf package/small-package/luci-app-cloudflarespeedtest
-#rm -rf feeds/smpackage/{base-files,dnsmasq,firewall*,fullconenat,libnftnl,nftables,ppp,opkg,ucl,upx,vsftpd*,miniupnpd-iptables,wireless-regdb}
-rm -rf package/feeds/packages/aliyundrive-webdav
-rm -rf feeds/packages/multimedia/aliyundrive-webdav
-rm -rf package/feeds/packages/perl-xml-parser
-rm -rf package/feeds/packages/xfsprogs
+
 # rm -rf package/feeds/packages/alist
 # rm -rf feeds/packages/net/alist
 rm -rf feeds/luci/applications/luci-app-openlist
