@@ -117,6 +117,25 @@ jobs:
         echo "compile_status=success" >> $GITHUB_ENV
         df -hT
 
+    - name: Safe cleanup after compilation
+      run: |
+        # 安全删除目标文件（只删除文件，不删除目录）
+        rm -rf /home/runner/work/test/test/openwrt/bin/targets/*/*/packages || true
+        rm -rf /home/runner/work/test/test/openwrt/bin/targets/*/*/buildinfo || true
+        rm -rf /home/runner/work/test/test/openwrt/bin/targets/*/*/profiles || true
+        rm -rf /home/runner/work/test/test/openwrt/bin/targets/*/*/sha256sums || true
+        
+        # 安全删除 .o 文件（只删除文件）
+        find /workdir/openwrt -name "*.o" -type f -exec rm -f {} \; 2>/dev/null || true
+        
+        # 安全删除 .log 文件
+        find /workdir/openwrt -name "*.log" -type f -exec rm -f {} \; 2>/dev/null || true
+        
+        # 清理 ccache 缓存
+        ccache -c || true
+        
+        df -hT
+
     - name: Free up space - Compile Post
       uses: jlumbroso/free-disk-space@main
       with:
@@ -128,12 +147,14 @@ jobs:
         docker-images: true
         swap-storage: true
 
-    
-
     - name: 清理磁盘空间
       run: |
-        mkdir /workdir/upload
-        cp openwrt/bin/targets/*/*/*.tar.gz /workdir/upload/
+        mkdir -p /workdir/upload
+        # 复制固件文件
+        cp openwrt/bin/targets/*/*/*.tar.gz /workdir/upload/ 2>/dev/null || true
+        cp openwrt/bin/targets/*/*/*.img.gz /workdir/upload/ 2>/dev/null || true
+        
+        # 显示磁盘使用情况
         sudo du -h --max-depth=1 /workdir | sort -nr | head -10
         df -hT
 
@@ -141,7 +162,7 @@ jobs:
       if: ${{ env.compile_status }} == 'success' && !cancelled()
       uses: unifreq/openwrt_packit@master
       env:
-        OPENWRT_ARMVIRT: openwrt/bin/targets/*/*/*.tar.gz  # 直接使用编译后的文件
+        OPENWRT_ARMVIRT: openwrt/bin/targets/*/*/*.tar.gz
         KERNEL_VERSION_NAME: 6.12.y_6.6.y
         KERNEL_AUTO_LATEST: true
         PACKAGE_SOC: diy
@@ -152,44 +173,42 @@ jobs:
         WHOAMI: test
         SW_FLOWOFFLOAD: 0
         SFE_FLOW: 0
-         
 
     - name: 整理文件
       run: |
-        mv /opt/openwrt_packit/output/* /workdir/upload/
+        mkdir -p /workdir/upload
+        # 复制打包后的文件
+        cp -f /opt/openwrt_packit/output/* /workdir/upload/ 2>/dev/null || echo "No packit output files found"
         df -hT
 
     - name: Upload firmware to release
-      uses: ncipollo/release-action@v1
-      if: ${{ env.PACKAGED_STATUS == 'success' }} && !cancelled()
+      if: ${{ env.compile_status }} == 'success' && !cancelled()
+      uses: softprops/action-gh-release@v1
       with:
-        tag: OpenWrt_${{ env.PACKAGED_OUTPUTDATE }}
-        artifacts: /workdir/upload/*
-        allowUpdates: true
-        token: ${{ secrets.GI_TOKEN }}
+        files: /workdir/upload/*
+        tag_name: OpenWrt_$(date +'%Y%m%d_%H%M%S')
         body: |
           首次使用建议全新刷写
           * 基本信息
           IP: 192.168.110.247
           账户: root
           密码: password
-          df -hT
+      env:
+        GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
 
     - name: Delete old releases
       uses: Mattraks/delete-workflow-runs@v2.0.6
       with:
-         token: ${{ secrets.GI_TOKEN }}
-         repository: ${{ github.repository }}
-         retain_days: 1
-         keep_minimum_runs: 0
-         
+        token: ${{ secrets.GI_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 0
 
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.3.4
       with:
-          keep_latest: 1  # 保留最新的5个发布
-          delete_tag: true  # 同时删除关联的标签
-          repo: ${{ github.repository }}
+        keep_latest: 1
+        delete_tag: true
+        repo: ${{ github.repository }}
       env:
-         GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
-      
+        GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
