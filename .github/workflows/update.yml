@@ -1,4 +1,4 @@
-name: for N1 24
+name: for 919
 
 on:
   workflow_dispatch:
