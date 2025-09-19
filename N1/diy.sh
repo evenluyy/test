@@ -62,3 +62,5 @@ rm -rf package/small-package/luci-app-openlist
 rm -rf feeds/luci/applications/luci-app-openlist2
 rm -rf package/small-package/luci-app-openlist2
 rm -rf package/small-package/alist
+rm -rf package/small-package/openlist2
+rm -rf feeds/luci/applications/openlist2
