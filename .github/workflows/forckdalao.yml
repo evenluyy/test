@@ -18,23 +18,24 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
       uses: actions/checkout@main
 
     - name: Free up space
-      uses: jlumbroso/free-disk-space@main
+      uses: endersonmenezes/free-disk-space@v2
       with:
-        tool-cache: true
-        android: true
-        dotnet: true
-        haskell: true
-        large-packages: true
-        docker-images: true
-        swap-storage: true
-
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell /usr/local/julia /usr/local/aws-cli /usr/local/aws-sam-cli /usr/share/gradle"
+          testing: false
     - name: Initialize environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -52,22 +53,7 @@ jobs:
           python3-docutils python3-pyelftools qemu-utils re2c rsync scons \
           squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim \
           wget xmlto xxd zlib1g-dev zstd \
-          libfuse-dev fuse libmnl-dev  # 新增 libmnl-dev 依赖
-
-        # 编译安装 libnftnl 1.3.0
-        cd /tmp
-        wget https://netfilter.org/projects/libnftnl/files/libnftnl-1.2.9.tar.xz
-        
-        tar -xJf libnftnl-1.2.9.tar.xz
-        cd libnftnl-1.2.9
-        ./configure --prefix=/usr/local
-        make -j$(nproc)
-        sudo make install
-        sudo ldconfig
-
-        # 验证 libnftnl 版本
-        # nftnl --version
-
+          libfuse-dev fuse  # 新增关键依赖
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -82,14 +68,10 @@ jobs:
 
     - name: Update & Install feeds
       working-directory: ./openwrt
-      env:
-        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-        LIBNFTNL_CFLAGS: -I/usr/local/include  # 显式指定头文件路径
-        LIBNFTNL_LIBS: -L/usr/local/lib -lnftnl   # 显式指定库文件路径
       run: |
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        ./scripts/feeds install libfuse
+        ./scripts/feeds install libfuse  # 确保 FUSE 包被安装
 
     - name: Load custom config
       run: |
@@ -101,10 +83,6 @@ jobs:
 
     - name: Configure FUSE and dependencies
       working-directory: ./openwrt
-      env:
-        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-        LIBNFTNL_CFLAGS: -I/usr/local/include  # 显式指定头文件路径
-        LIBNFTNL_LIBS: -L/usr/local/lib -lnftnl   # 显式指定库文件路径
       run: |
         echo "CONFIG_FUSE_FS=y" >> .config
         echo "CONFIG_PACKAGE_kmod-fuse=y" >> .config
@@ -118,27 +96,16 @@ jobs:
 
     - name: Download package
       working-directory: ./openwrt
-      env:
-        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-        LIBNFTNL_CFLAGS: -I/usr/local/include  # 显式指定头文件路径
-        LIBNFTNL_LIBS: -L/usr/local/lib -lnftnl   # 显式指定库文件路径
       run: |
-        make download -j8
-        find dl -size -1024c -exec rm -f {} \;
+          make download -j8
+          find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
-      env:
-        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-        LIBNFTNL_CFLAGS: -I/usr/local/include  # 显式指定头文件路径
-        LIBNFTNL_LIBS: -L/usr/local/lib -lnftnl   # 显式指定库文件路径
       run: |
         chmod -R 755 openwrt
         cd openwrt
         echo -e "$(nproc) thread compile"
         export CGO_ENABLED=0
-        export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-        export LIBNFTNL_CFLAGS="-I/usr/local/include" # 显式指定头文件路径
-        export LIBNFTNL_LIBS="-L/usr/local/lib -lnftnl"  # 显式指定库文件路径
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "compile_status=success" >> $GITHUB_ENV
         rm -rf ${{ github.workspace }}/openwrt/bin/targets/*/*/packages
@@ -169,7 +136,7 @@ jobs:
       uses: unifreq/openwrt_packit@master
       env:
         OPENWRT_ARMVIRT: openwrt-armvirt/*.tar.gz
-        KERNEL_VERSION_NAME: 6.12.y
+        KERNEL_VERSION_NAME: 6.12.y_6.6.y
         KERNEL_AUTO_LATEST: true
         PACKAGE_SOC: diy
         GZIP_IMGS: .xz
@@ -208,8 +175,10 @@ jobs:
     - name: Delete old releases
       uses: dev-drprasad/delete-older-releases@v0.3.4
       with:
-          keep_latest: 1
-          delete_tag: true
+          keep_latest: 1  # 保留最新的5个发布
+          delete_tag: true  # 同时删除关联的标签
           repo: ${{ github.repository }}
+          
+          
       env:
          GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
