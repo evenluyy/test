@@ -27,9 +27,14 @@ git clone https://github.com/xiaorouji/openwrt-passwall-packages package/passwal
 rm -rf package/small-package/luci-app-passwall2
 #rm -rf package/small-package/luci-theme-argon*
 rm -rf package/small-package/luci-app-amlogic
-rm -rf package/small-package/{natflow,luci-app-nginx-pingos,luci-app-gowebdav,luci-app-dogcom,luci-app-bandwidthd,wireless-regdb}
+# rm -rf package/small-package/{natflow,luci-app-nginx-pingos,luci-app-gowebdav,luci-app-dogcom,luci-app-bandwidthd,wireless-regdb}
 rm -rf package/small-package/luci-app-cloudflarespeedtest
+rm -rf package/small-package/natflow
+rm -rf package/small-package/luci-app-nginx-pingos
+rm -rf package/small-package/luci-app-bandwidthd
+rm -rf package/small-package/luci-app-gowebdav
 
+rm -rf package/small-package/luci-app-dogcom
 # rm -rf package/feeds/packages/alist
 # rm -rf feeds/packages/net/alist
 rm -rf feeds/luci/applications/luci-app-openlist
