@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@main
 
     - name: Free up space
-      uses: jlumbroso/free-disk-space@main
+      uses: insightsengineering/disk-space-reclaimer@v1
       with:
         tool-cache: true
         android: true
