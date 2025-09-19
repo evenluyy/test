@@ -82,16 +82,15 @@ jobs:
       working-directory: ./openwrt
       run: |
         make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
+        make download -j$(( $(nproc) * 2 ))
+        find dl -size -1k -exec rm -f {} \;
 
     - name: Compile the firmware
       run: |
         chmod -R 755 openwrt
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 || make -j1 V=s
+        make -j$(( $(nproc) + 1 )) || make -j1 V=s
         echo "compile_status=success" >> $GITHUB_ENV
 
     - name: Free up space2
