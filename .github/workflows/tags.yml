@@ -17,7 +17,7 @@ jobs:
     - name: Delete tags older than 90 days
       run: |
         # 获取90天前的日期
-        CUTOFF_DATE=$(date -d "16 days ago" +%Y-%m-%d)
+        CUTOFF_DATE=$(date -d "3 days ago" +%Y-%m-%d)
         
         # 列出所有tags并过滤
         git for-each-ref --sort=-creatordate --format '%(creatordate:iso8601) %(refname:short)' refs/tags | \
