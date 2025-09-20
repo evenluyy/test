@@ -1,0 +1,52 @@
+name: Delete O
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日午夜运行
+  workflow_dispatch:
+
+jobs:
+  delete-old-tags:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Delete old releases (keep only latest 1)
+      uses: actions/github-script@v6
+      with:
+      script: |
+        const releases = await github.rest.repos.listReleases({
+         owner: context.repo.owner,
+         repo: context.repo.repo,
+         per_page: 100
+        });
+      
+        const sortedReleases = releases.data.sort((a, b) => 
+          new Date(b.created_at) - new Date(a.created_at)
+        );
+      
+        for (let i = 1; i < sortedReleases.length; i++) {
+          const release = sortedReleases[i];
+          console.log(`Deleting old release: ${release.tag_name}`);
+        
+          await github.rest.repos.deleteRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: release.id
+          });
+        
+          try {
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `tags/${release.tag_name}`
+            });
+          } catch (error) {
+            console.log(`Tag ${release.tag_name} already deleted or not found`);
+          }
+        }
+      
+        return `Kept 1 release, deleted ${sortedReleases.length - 1} old releases`;
