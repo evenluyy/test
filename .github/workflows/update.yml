@@ -200,35 +200,47 @@ jobs:
         body: |
             首次使用建议全新刷写
             * 基本信息
-            IP: 192.168.110.247
+            IP: 192.168.110.241
             账户: root
             密码: password
       env:
           GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
     - name: Delete old releases (keep only latest 1)
-      run: |
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const releases = await github.rest.repos.listReleases({
+           owner: context.repo.owner,
+           repo: context.repo.repo,
+           per_page: 100
+          });
+      
+           const sortedReleases = releases.data.sort((a, b) => 
+             new Date(b.created_at) - new Date(a.created_at)
+           );
+      
+           for (let i = 2; i < sortedReleases.length; i++) {
+            const release = sortedReleases[i];
+            console.log(`Deleting old release: ${release.tag_name}`);
         
-        sudo apt update && sudo apt install -y curl
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-        sudo apt update
-        sudo apt install -y gh
-
-         # 使用 token 登录
-        echo "${{ secrets.GI_TOKEN }}" | gh auth login --with-token
-
-         # 获取所有发布标签（最新的在前）
-        readarray -t tags < <(gh release list --repo ${{ github.repository }} --limit 100 --json tagName --jq '.[].tagName')
-
-         # 删除除第一个（最新）之外的所有发布
-        for i in "${!tags[@]}"; do
-          if [ $i -gt 2 ]; then
-            echo "Deleting old release: ${tags[$i]}"
-            gh release delete "${tags[$i]}" --repo ${{ github.repository }} --cleanup-tag --yes
-          else
-            echo "Keeping latest release: ${tags[$i]}"
-          fi
-        done
+             await github.rest.repos.deleteRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.id
+            });
+        
+            try {
+              await github.rest.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${release.tag_name}`
+              });
+              } catch (error) {
+              console.log(`Tag ${release.tag_name} already deleted or not found`);
+            }
+          }
+      
+          return `Kept 1 release, deleted ${sortedReleases.length - 1} old releases`;
 
     - name: Delete old workflow runs
       uses: Mattraks/delete-workflow-runs@v2.0.6
