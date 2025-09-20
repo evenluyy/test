@@ -176,25 +176,35 @@ jobs:
 
     - name: 整理文件
       run: |
-        mkdir -p /workdir/upload
-        # 复制打包后的文件
-        cp -f /opt/openwrt_packit/output/* /workdir/upload/ 2>/dev/null || echo "No packit output files found"
-        df -hT
+         mkdir -p /workdir/upload
+          # 复制打包后的文件
+         cp -f /opt/openwrt_packit/output/* /workdir/upload/ 2>/dev/null || echo "No packit output files found"
+    
+          # 显示上传目录内容
+         echo "Files in upload directory:"
+          ls -la /workdir/upload/ || true
+    
+          df -hT
+
+    - name: Generate timestamp for release tag
+      run: |
+        echo "RELEASE_TAG=OpenWrt_$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_ENV
 
     - name: Upload firmware to release
       if: ${{ env.compile_status }} == 'success' && !cancelled()
       uses: softprops/action-gh-release@v1
       with:
         files: /workdir/upload/*
-        tag_name: OpenWrt_$(date +'%Y%m%d_%H%M%S')
+        tag_name: ${{ env.RELEASE_TAG }}
+        name: OpenWrt Build ${{ env.RELEASE_TAG }}
         body: |
-          首次使用建议全新刷写
-          * 基本信息
-          IP: 192.168.110.247
-          账户: root
-          密码: password
+            首次使用建议全新刷写
+            * 基本信息
+            IP: 192.168.110.247
+            账户: root
+            密码: password
       env:
-        GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GI_TOKEN }}
 
     - name: Delete old releases
       uses: Mattraks/delete-workflow-runs@v2.0.6
