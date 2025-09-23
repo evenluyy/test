@@ -12,6 +12,8 @@ rm -rf feeds/luci/applications/luci-app-alist
 rm -rf feeds/luci/applications/luci-app-passwall2
 rm -rf feeds/packages/net/cdnspeedtest
 # rm -rf feeds/packages/gst1-plugins-base
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/kenzok8/golang -b 1.25 feeds/packages/lang/golang
 # cf测速换ip两个插件
 git clone https://github.com/dsddr02/cdnspeedtest package/cdnspeedtest
 git clone https://github.com/dsddr02/peed11 package/luci-app-cloudflarespeedtest
